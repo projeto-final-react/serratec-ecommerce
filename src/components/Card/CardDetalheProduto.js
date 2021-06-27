@@ -18,7 +18,7 @@ const CardeDetalheProduto = (props)=>{
              </div> 
 
              <div className='cardRigth'>
-                <IncluiProduto/>
+                <IncluiProduto idProduto={props.idProduto}/>
             </div> 
 
 

@@ -34,14 +34,29 @@ function removePedido() {
     localStorage.removeItem('idPedido')
 }
 
+function salvarNumeroPedido(numeroPedido){
+    localStorage.setItem('numeroPedido', numeroPedido)
+}
+
+function pegaNumeroPedido(){
+    return localStorage.getItem('numeroPedido')
+}
+
+function deletaPedido(){
+    localStorage.removeItem('numeroPedido')
+}
+
 export default {
-    salvarTokenNaStorage,
+    getId,
+    saveId,
+    removeId,
+    getPedido,
+    savePedido,
+    deletaPedido,
+    removePedido,
+    pegaNumeroPedido,
+    salvarNumeroPedido,
     obterTokenNaStorage,
     removerAutenticacao,
-    saveId,
-    getId,
-    removeId,
-    savePedido,
-    getPedido,
-    removePedido
+    salvarTokenNaStorage
 }

@@ -5,80 +5,106 @@ import utilStorage from '../../utils/storage'
 
 const Carrinho = () => {
 
-    const [pedidos, setPedidos] = useState([]);
-    // const [produtos,setProdutos] = useState([]);
+    var respostaFiltrada
+    const [produtos, setProdutos] = useState([]);
 
-    const obterPedidos = async () => {
-        const resposta = await ApiCarrinho.obterTodos();
-        setPedidos(resposta.data);
-        console.log(pedidos);
+    let pedido = localStorage.getItem('idPedido')
+    const obterProdutosCarrinho = async () => {
+        if (pedido) {
+            const resposta = await ApiCarrinho.getDetalhesPedido();
+            let tempResposta = resposta.data
+            respostaFiltrada = tempResposta.filter(produto => (produto.idPedido == pedido))
+            respostaFiltrada = respostaFiltrada.sort((a, b) => {
+                return a.id - b.id;
+            });
+            setProdutos(respostaFiltrada);
+        }
+    }
+
+    function atualizaDetalhe(id, detalhePedido) {
+        ApiCarrinho.atualizaDetalhePedido(id, detalhePedido)
+            .then((resposta) => {
+                console.log(resposta)
+                obterProdutosCarrinho()
+            })
+            .catch((erro) => {
+                alert("ops, aconteceu algo inesperado!")
+                console.log(erro)
+            })
     }
 
     useEffect(() => {
         let token = utilStorage.obterTokenNaStorage();
-
         if (!token) {
             window.open("/login", "_self");
         }
-        obterPedidos()
+        obterProdutosCarrinho()
     }, [])
 
-    return (
-
-        <div className='container-produtos'>
-            <h1>Carrinho</h1>
-            {pedidos.map(pedido => (
-                <div>
-                    <Link to={'/carrinho/pedido/' + pedido.numeroPedido} key={pedido.numeroPedido}>
-                        <div>
-                            <h1>Número do pedido: {pedido.numeroPedido}</h1>
-                            <h1>Valor: R${pedido.valorTotal}</h1>
-                        </div>
-                    </Link>
-                    <Link to={'/pagamento/' + pedido.numeroPedido} key={pedido.numeroPedido}>
-                        <div>
-                            <button>Finalizar</button>
-                            <h1>R${pedido.valorTotal}</h1>
-                        </div>
-                    </Link>
-                </div>
-
-            ))}
-        </div>
-    );
-
-    // {
-    //     "id": 0,
-    //     "numeroPedido": "string",
-    //     "valorTotal": 0,
-    //     "dataQuePedidoFoiFeito": "2021-06-24",
-    //     "dataEntrega": "2021-06-24",
-    //     "status": "string",
-    //     "produtosDoPedido": [
-    //       {
-    //         "id": 0,
-    //         "idPedido": 0,
-    //         "idProduto": 0,
-    //         "quantidadeProdutos": 0,
-    //         "precoDoProduto": 0
-    //       }
-    //     ],
-    //     "idDoClienteQueFezPedido": 0
-    //   }
-
-
-    //     <div className='container-produtos'>
-    //     <h1>Carrinho</h1>
-    //     {produtos.map(produtos => (
-    //         <MeuCard 
-    //             img={produtos.url}
-    //             nome={produtos.nome}
-    //             descricao={produtos.descricao}
-    //             preco={produtos.preco}
-    //         />
-    //     ))
-    //     }
-    // </div>
+    if (!pedido) {
+        return (
+            <div>
+                <p>Nem item no carrinho</p>
+                <Link to={'/'}>
+                    <button>Adicionar</button>
+                </Link>
+            </div>
+        );
+    } else {
+        return (
+            <div className='container-produtos'>
+                <h1>Carrinho</h1>
+                {produtos.map((produto, index) => (
+                    <div key={produto.id}>
+                        <p value={produto.idProduto}>Nome do Produto: {produto.idProduto}</p>
+                        <p value={produto.idProduto}>Nome do Detalhe: {produto.id}</p>
+                        <p>Valor do Produto: {produto.precoDoProduto}</p>
+                        <button
+                            onClick={() => {
+                                let pro = [...produtos]
+                                let newProduto = produto
+                                newProduto.quantidadeProdutos++
+                                pro[index] = newProduto
+                                setProdutos(pro)
+                                let dtoProduto = {
+                                    idPedido: produto.idPedido,
+                                    idProduto: produto.idProduto,
+                                    quantidade: produto.quantidadeProdutos
+                                }
+                                atualizaDetalhe(newProduto.id, dtoProduto)
+                            }}
+                            type="number"
+                        >
+                            +
+                        </button>
+                        <p>Quantidade: {produto.quantidadeProdutos}</p>
+                        <button
+                            onClick={() => {
+                                let pro = [...produtos]
+                                let newProduto = produto
+                                newProduto.quantidadeProdutos--
+                                pro[index] = newProduto
+                                setProdutos(pro)
+                                let dtoProduto = {
+                                    idPedido: produto.idPedido,
+                                    idProduto: produto.idProduto,
+                                    quantidade: produto.quantidadeProdutos
+                                }
+                                atualizaDetalhe(newProduto.id, dtoProduto)
+                            }}
+                            type="number"
+                        >-</button>
+                        <p>Valor por Produto: {produto.precoDoProduto * produto.quantidadeProdutos}</p>
+                    </div>
+                ))}
+                <Link to={'/pagamento/'}>
+                    <div>
+                        <button>Finalizar</button>
+                    </div>
+                </Link>
+            </div>
+        );
+    }
 
 }
 export default Carrinho;

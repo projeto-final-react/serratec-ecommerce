@@ -10,7 +10,7 @@ import Login from "./pages/login";
 import Pagamento from "./pages/pagamento";
 import Pesquisa from "./pages/home";
 import Header from "./components/Header";
-import Detalhes from './pages/carrinho/detalhes'
+
 import Topo from '../src/components/Header/index'
 import Frete from '../src/pages/home/categoria1'
 import Nacional from '../src/pages/home/categoria2'
@@ -29,7 +29,6 @@ const Routes = () => (
       <Route path="/produtos/pesquisa" component={Pesquisa} />
       <Route path="/cadastro" component={Cadastro} />
       <Route exact path="/carrinho" component={Carrinho} />
-      <Route path="/carrinho/pedido/:numeroDoPedido" component={Detalhes} />
       <Route path="/login" component={Login} />
       <Route path="/pagamento" component={Pagamento} />
     </Switch>

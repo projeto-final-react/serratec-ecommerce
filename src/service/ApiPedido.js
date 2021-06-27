@@ -1,6 +1,5 @@
 import api from "./Api";
 
-
 function criar(pedido) {
   return new Promise((resolve, reject) => {
     return api.post('/pedido', pedido)

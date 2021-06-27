@@ -36,7 +36,7 @@ const Home = () => {
 
     useEffect(() => {
         obterProdutos();
-    }, "batinha")
+    }, [])
 
     return (
         // <div className='container-produtos'>

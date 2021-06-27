@@ -24,8 +24,36 @@ function obterProdutos(numeroDoPedido) {
     });
 }
 
+function getDetalhesPedido() {
+    return new Promise((resolve, reject) => {
+        return Api.get(`pedido/detalhes/`)
+            .then(response => resolve(response))
+            .catch(error => reject(error))
+    })
+}
+
+function atualizaDetalhePedido(id, detalhePedido) {
+    return new Promise((resolve, reject) => {
+        return Api.put(`pedido/detalhes/${id}`, detalhePedido)
+            .then(response => resolve(response))
+            .catch(error => reject(error))
+    })
+}
+
+function adicionaDetalhePedido(detalhePedido) {
+    return new Promise((resolve, reject) => {
+        return Api.post(`pedido/detalhes/`, detalhePedido)
+            .then(response => resolve(response))
+            .catch(error => reject(error))
+    })
+}
+
+
 export default {
-    obterPorNumero,
     obterTodos,
-    obterProdutos
+    obterProdutos,
+    obterPorNumero,
+    getDetalhesPedido,
+    atualizaDetalhePedido,
+    adicionaDetalhePedido
 };

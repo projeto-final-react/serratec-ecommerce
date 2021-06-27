@@ -22,13 +22,14 @@ const Detalhes = (props) => {
                 console.log(error)
             }))
     }
+
     const { id } = props.match.params;
    
 
     useEffect(() => {
         obterProdutos(id);
         console.log(id);
-    }, "batinha")
+    }, [])
 
     return (
         <ContainerprodutoWay>

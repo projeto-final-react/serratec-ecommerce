@@ -27,8 +27,10 @@ const Login = () => {
       .logar(username, senha)
       .then((resposta) => {
         const { Authorization } = resposta.data;
+        const { idCliente } = resposta.data;
         console.log(resposta);
         utilStorage.salvarTokenNaStorage(Authorization);
+        utilStorage.saveId(idCliente);
         window.open("/", "_self");
       })
       .catch((erro) => {
